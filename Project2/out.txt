@@ -1,0 +1,3 @@
+1.png                    4.png                    5120719015_包昱嘉_HW2.md HW3_2.png                easy_shell.c             ls                       
+2.png                    5.png                    5120719015_包昱嘉_HW3.md easy_ls                  easy_shell.md            out.txt                  
+3.png                    5120719015_包昱嘉_HW1.md HW3_1.png                easy_ls.c                
