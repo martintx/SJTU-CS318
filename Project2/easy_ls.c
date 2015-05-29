@@ -5,9 +5,9 @@
  * Filename  : easy_ls.c
  * Description   : Project 2 -- Easy ls tool for CS318 Operating System
  * Copyright(c) 2015, Yujia Bao All Rights Reserved.
+ * https://github.com/YujiaBao/SJTU-CS318
  * *******************************************************/
-//#define WRITEFILE
-#define COLOUR
+#define WRITEFILE
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -281,16 +281,30 @@ int main(int argc, char *argv[]){
 				}
 	}
 
-	char *dirlist[(dir_nums == 1)?1:dir_nums];
+	//get current work path
+	char pwdbuf[100];
+	getcwd(pwdbuf, sizeof(pwdbuf));
+	char dirlist[(dir_nums == 1)?1:dir_nums][200];
 	//ls equals ls ./
 	if(dir_nums == 0){
-		dirlist[0] = "./";
+		strcpy(dirlist[0], "./");
 		dir_nums = 1;
 	}
 	//copy directory
 	for(int i = 1, j = 0; i < argc; i++)
-		if (argv[i][0] != '-')
-			dirlist[j++] = argv[i];
+		if (argv[i][0] != '-'){
+			memset(dirlist[j],0,200*sizeof(char));
+			if(argv[i][0] == '/')
+				strcpy(dirlist[j++],argv[i]);
+			else{
+				char temp[100];
+				strcpy(temp,pwdbuf);
+				strcat(temp,"/");
+				strcat(temp,argv[i]);
+				strcpy(dirlist[j++],temp);
+			}
+		}
+
 #ifdef WRITEFILE
 	FILE *fp;
 	if (0 == (fp = freopen("out.txt","w",stdout))){
@@ -307,7 +321,7 @@ int main(int argc, char *argv[]){
 			printf("%s:\n", dirlist[i]);
 		}
 		if ((dp = opendir(dirlist[i])) == NULL){
-			printf("cannot open %s\n", dirlist[i]);
+			fprintf(stderr,"cannot open %s\n", dirlist[i]);
 			return 1;
 		}
 
@@ -318,9 +332,6 @@ int main(int argc, char *argv[]){
 		if(closedir(dp) == -1)
 			return 1;
 		
-	//get current work path
-		char pwdbuf[100];
-		getcwd(pwdbuf, sizeof(pwdbuf));
 	//Get information of each file
                 char namelist[num_of_file][1000];
 		char timelist[num_of_file][50];
